@@ -7,7 +7,7 @@ namespace InMemoryRepositories;
 public class PostInMemoryRepository : IPostRepository
 {
     private List<Post?> posts;
-    private Post? post;
+    private Post? post2;
     private Post? GetPostById(int id)
     {
         return posts.SingleOrDefault(p => p.Id == id) ?? throw new InvalidOperationException($"Post with ID '{id}' not found");
