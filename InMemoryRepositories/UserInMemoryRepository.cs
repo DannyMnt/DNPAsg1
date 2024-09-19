@@ -7,11 +7,15 @@ public class UserInMemoryRepository: IUserRepository
 {
     private List<User> users;
 
+    public UserInMemoryRepository()
+    {
+        users = new List<User>();
+    }
+
     private User? GetUserById(int id)
     {
         return users.SingleOrDefault(u => u.Id == id) ?? throw new InvalidOperationException($"User with ID '{id}' not found");
     }
-
 
     public Task<User> AddAsync(User user)
     {
