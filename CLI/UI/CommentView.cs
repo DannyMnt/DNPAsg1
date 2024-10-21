@@ -29,13 +29,15 @@ public class CommentView
                 string? body = Console.ReadLine();
                 Console.WriteLine("Post ID: ");
                 string? postId = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(body) || string.IsNullOrWhiteSpace(postId))
+                Console.WriteLine("Author: ");
+                string? author = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(body) || string.IsNullOrWhiteSpace(postId) || string.IsNullOrWhiteSpace(author))
                 {
-                    Console.WriteLine("Invalid body or post id");
+                    Console.WriteLine("Invalid body, post or user id");
                     return;
                 }
                 
-                await commentRepository.AddAsync(new Comment(1, body, Convert.ToInt32(postId)));
+                await commentRepository.AddAsync(new Comment(body, Convert.ToInt32(postId), Convert.ToInt32(author)));
                 Console.WriteLine("Comment added");
                 break;
             case "2":
@@ -46,8 +48,8 @@ public class CommentView
                 {
                     Console.WriteLine("New body: ");
                     string bodyToUpdate = Console.ReadLine()!;
-                    await commentRepository.UpdateAsync(new Comment(commentToUpdate.Id, bodyToUpdate, 
-                        commentToUpdate.PostId));
+                    await commentRepository.UpdateAsync(new Comment(bodyToUpdate, 
+                        commentToUpdate.PostId, commentToUpdate.UserId));
                     Console.WriteLine("Comment updated");
                 }
                 else {

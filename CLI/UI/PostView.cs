@@ -38,7 +38,7 @@ public class PostView
                     Console.WriteLine("Invalid title or body");
                     return;
                 }
-                await postRepository.AddAsync(new Post(1, title, body, userId));
+                await postRepository.AddAsync(new Post(title, body, userId));
                 Console.WriteLine("Post added");
                 break;
             case "2":
@@ -51,7 +51,7 @@ public class PostView
                     string titleToUpdate = Console.ReadLine()!;
                     Console.WriteLine("New body: ");
                     string bodyToUpdate = Console.ReadLine()!;
-                    await postRepository.UpdateAsync(new Post(postToUpdate.Id, titleToUpdate, bodyToUpdate, postToUpdate.UserId));
+                    await postRepository.UpdateAsync(new Post(titleToUpdate, bodyToUpdate, postToUpdate.UserId));
                     Console.WriteLine("Post updated");
                 }
                 else {

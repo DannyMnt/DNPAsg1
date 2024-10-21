@@ -7,9 +7,8 @@ public class Post
     public string Body { get; set; }
     public int UserId { get; set; }
 
-    public Post(int id, string title, string body, int userId)
+    public Post(string title, string body, int userId)
     {
-        Id = id;
         Title = title;
         Body = body;
         UserId = userId;

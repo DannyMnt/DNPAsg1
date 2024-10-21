@@ -19,7 +19,7 @@ public class UserView
 
     private async Task<User> AddUserAsync(string name, string password)
     {
-        User user = new User(1, name, password);
+        User user = new User(name, password);
         User created = await userRepository.AddAsync(user);
         return created;
     }
@@ -54,7 +54,7 @@ public class UserView
                     return;
                 }
                 
-                await userRepository.AddAsync(new User(1, username, password));
+                await userRepository.AddAsync(new User(username, password));
                 Console.WriteLine("User added");
                 break;
             case "2":
@@ -67,7 +67,7 @@ public class UserView
                     string usernameToUpdate = Console.ReadLine()!;
                     Console.WriteLine("New password: ");
                     string passwordToUpdate = Console.ReadLine()!;
-                    await userRepository.UpdateAsync(new User(userToUpdate.Id, usernameToUpdate, passwordToUpdate));
+                    await userRepository.UpdateAsync(new User(usernameToUpdate, passwordToUpdate));
                     Console.WriteLine("User updated");
                 }
                 else {
