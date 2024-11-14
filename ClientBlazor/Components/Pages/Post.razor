@@ -1,0 +1,143 @@
+@page "/Post"
+@using ClientBlazor.Services
+@using DTOs
+@inject IPostService httpPostService;
+@inject ICommentService httpCommentService;
+@inject IUserService httpUserService;
+
+<h3>Post</h3>
+
+<input @bind="postTitle" placeholder="Enter post title"/>
+<input @bind="postBody" placeholder="Enter post body"/>
+<input @bind="postUserId" placeholder="Enter user ID"/>
+
+<button class = "crudButton" @onclick="AddPost">Add Post</button>
+
+<ul style="padding: 20px">
+    @foreach (var post in posts)
+    {
+        <li @onclick="async () => await OpenPost(post)">
+            <p>Title: @post.Title posted by @usernames.GetValueOrDefault(post.UserId), @post.Body</p>
+        </li>
+    }
+</ul>
+
+@if (generatedPost != null)
+{
+    <div style="padding: 20px; background-color: #6C7397">
+        <p>@generatedPost.Title by @username</p>
+        <p>@generatedPost.Body</p>
+        <input class = "inputField" @bind="comment" placeholder="New Comment"/>
+        <input class = "inputField" @bind = "commentUserId" placeholder="User ID"/>
+        <button @onclick="() => AddNewComment(comment)">Add Comment</button>
+        <p>Comments: </p>
+        <ul>
+            @foreach (var comment in comments)
+            {
+                <p>@comment.UserId: @comment.Body</p>
+            }
+        </ul>
+    </div>
+}
+
+<p>@response</p>
+
+@code {
+    private string postTitle;
+    private string postBody;
+    private string postUserId;
+    private string response;
+    private string comment;
+    private string commentUserId;
+    private string username;
+    private List<CreatePostDto> posts = new List<CreatePostDto>();
+    private List<CreateCommentDto> comments = new List<CreateCommentDto>();
+    private CreatePostDto generatedPost;
+    private Dictionary<int, string> usernames = new Dictionary<int, string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var result = await httpPostService.GetPostsAsync();
+            if (result != null){
+                posts = result.ToList();
+                await LoadUsernames();
+            }
+        }
+        catch (Exception e)
+        {
+            response = $"Error loading posts: {e.Message}";
+        }
+    }
+
+    private async Task LoadUsernames()
+    {
+        foreach (var post in posts)
+        {
+            if (!usernames.ContainsKey(post.UserId))
+                usernames[post.UserId] = await GetUsername(post.UserId);
+        }
+        StateHasChanged();
+    }
+
+    private async Task AddPost()
+    {
+        var dto = new CreatePostDto
+        {
+            Title = postTitle,
+            Body = postBody,
+            UserId = Convert.ToInt32(postUserId)
+        };
+
+        await httpPostService.AddPostAsync(dto);
+        response = $"Post with title '{postTitle}' and body '{postBody}' added";
+
+        var result = await httpPostService.GetPostsAsync();
+        if (result != null)
+            posts = result.ToList();
+
+        postTitle = "";
+        postBody = "";
+        postUserId = "";
+
+        StateHasChanged();
+    }
+
+    private async Task OpenPost(CreatePostDto post)
+    {
+        generatedPost = post;
+        comments = await httpCommentService.GetComments(post.Id);
+        username = await GetUsername(post.UserId);
+
+        StateHasChanged();
+    }
+
+    private async Task<string> GetUsername(int userId)
+    {
+        try
+        {
+            var user = await httpUserService.GetUserAsync(userId);
+            return user?.Username ?? "Unknown";
+        }
+        catch (Exception)
+        {
+            return "Error retrieving username";
+        }
+    }
+
+    private async Task AddNewComment(string commentBody)
+    {
+        var dto = new CreateCommentDto
+        {
+            Body = commentBody,
+            PostId = generatedPost.Id,
+            UserId = Convert.ToInt32(commentUserId)
+        };
+
+        await httpCommentService.AddComment(dto);
+        comment = "";
+        comments = await httpCommentService.GetComments(generatedPost.Id);
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,47 @@
+@page "/User"
+@using ClientBlazor.Services
+@using DTOs
+@inject IUserService httpUserService
+
+<h3>User</h3>
+
+<input @bind = "inputUsername" placeholder="Username"/>
+<input @bind = "inputPassword" placeholder="Password"/>
+
+<button @onclick="AddUser">Add User</button>
+<button @onclick="GetUser">Get User</button>
+<button @onclick="DeleteUser">Delete User</button>
+
+<p>@response</p>
+
+<input @bind="id" placeholder="ID"/>
+
+@code {
+    private String id;
+    private String response;
+    private String inputUsername;
+    private String inputPassword;
+
+    private async Task AddUser()
+    {
+        CreateUserDto dto = new CreateUserDto()
+        {
+            Username = inputUsername,
+            Password = inputPassword
+        };
+        await httpUserService.AddUserAsync(dto);
+        response = "User " + inputUsername + " added";
+    }
+
+    private async Task DeleteUser()
+    {
+        await httpUserService.DeleteUserAsync(Convert.ToInt32(id));
+        response = "User with id " + id + " deleted";
+    }
+
+    private async Task GetUser()
+    {
+        CreateUserDto user = await httpUserService.GetUserAsync(Convert.ToInt32(id));
+        response = user.Username;
+    }
+}

@@ -61,7 +61,7 @@ public class PostFileRepository: IPostRepository
         return post;
     }
 
-    public IQueryable<Post> getMany()
+    public IEnumerable<Post> getMany()
     {
         string postsAsJson = File.ReadAllTextAsync(filePath).Result;
         List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postsAsJson)!;

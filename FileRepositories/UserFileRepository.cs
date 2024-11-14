@@ -61,6 +61,14 @@ public class UserFileRepository:IUserRepository
         return user;
     }
 
+    public async Task<User> getSingleAsync(string username)
+    {
+        var users = await GetUsers();
+        User user = users.SingleOrDefault(x => x.Username == username)!;
+        await WriteUsers(users);
+        return user;
+    }
+
     public IQueryable<User> getMany()
     {
         string usersAsJson = File.ReadAllTextAsync(filePath).Result;

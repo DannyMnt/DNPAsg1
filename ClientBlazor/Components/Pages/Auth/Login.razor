@@ -1,0 +1,52 @@
+@page "/login"
+@using ClientBlazor.Auth
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity.Data
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager navMgr
+<h3>Login</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>Please login</h3>
+        <label>User name:</label>
+        <input type="text" @bind="userName"/>
+        <label>Password:</label>
+        <input type="password" @bind="password"/>
+        @if (!string.IsNullOrEmpty(errorLabel))
+        {
+        <label style="color: red">
+            @errorLabel
+        </label>
+        }
+        <button @onclick="LoginAsync">Log in</button>
+    </NotAuthorized>
+    <Authorized>
+        <h3>Hello, @context.User.Identity.Name</h3>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private string userName;
+    private string password;
+    private string errorLabel;
+    
+    private async Task LoginAsync()
+    {
+        var loginRequest = new LoginRequest()
+        {
+            Email = userName,
+            Password = password
+        };
+        try
+        {
+            await ((SimpleAuthProvider)AuthProvider).Login(loginRequest);
+            navMgr.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            errorLabel = $"Error: {e.Message}";
+            StateHasChanged();
+        }
+    }
+}

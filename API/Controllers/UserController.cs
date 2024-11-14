@@ -38,6 +38,13 @@ public class UserController : ControllerBase
         return Results.Ok(user);
     }
 
+    [HttpGet("{username}")]
+    public async Task<User> GetUserByUsername([FromRoute] string username)
+    {
+        User user = await userRepository.getSingleAsync(username);
+        return user;
+    }
+
     [HttpPut("{id}")]
     public async Task<IResult> ReplaceUser([FromRoute] int id, [FromBody] CreateUserDto req, [FromServices] 
     IUserRepository 

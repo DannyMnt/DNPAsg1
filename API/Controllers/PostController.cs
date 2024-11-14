@@ -62,6 +62,13 @@ public class PostController : ControllerBase
         return Results.Ok(posts);
     }
 
+    [HttpGet("posts")]
+    public async Task<IEnumerable<Post>> GetPosts()
+    {
+        IEnumerable<Post> posts = postRepository.getMany();
+        return posts;
+    }
+
     [HttpGet("user/{userId}")]
     public async Task<IResult> GetPostsByUser([FromRoute] int? userId)
     {
