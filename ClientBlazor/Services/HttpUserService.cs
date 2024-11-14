@@ -6,10 +6,36 @@ namespace ClientBlazor.Services;
 public class HttpUserService: IUserService
 {
     private readonly HttpClient client;
-
+    private readonly Dictionary<int, string> usernames = new();
     public HttpUserService(HttpClient client)
     {
         this.client = client;
+    }
+    public async Task<string> GetUsername(int userId)
+    {
+        if (usernames.ContainsKey(userId))
+            return usernames[userId];
+
+        var user = await GetUserAsync(userId);
+        string username = user?.Username ?? "Unknown";
+        usernames[userId] = username;
+        return username;
+    }
+    
+    public async Task LoadUsernamesForPosts(List<CreatePostDto> posts)
+    {
+        foreach (var post in posts)
+        {
+            await GetUsername(post.UserId);
+        }
+    }
+
+    public async Task LoadUsernamesForComments(List<CreateCommentDto> comments)
+    {
+        foreach (var comment in comments)
+        {
+            await GetUsername(comment.UserId);
+        }
     }
     
     public async Task<CreateUserDto?> AddUserAsync(CreateUserDto request)

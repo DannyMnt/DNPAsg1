@@ -1,4 +1,6 @@
 @page "/Post"
+@attribute [Authorize]
+@using System.Security.Claims
 @using ClientBlazor.Services
 @using DTOs
 @inject IPostService httpPostService;
@@ -9,15 +11,14 @@
 
 <input @bind="postTitle" placeholder="Enter post title"/>
 <input @bind="postBody" placeholder="Enter post body"/>
-<input @bind="postUserId" placeholder="Enter user ID"/>
 
-<button class = "crudButton" @onclick="AddPost">Add Post</button>
+<button class="crudButton" @onclick="AddPost">Add Post</button>
 
 <ul style="padding: 20px">
     @foreach (var post in posts)
     {
-        <li @onclick="async () => await OpenPost(post)">
-            <p>Title: @post.Title posted by @usernames.GetValueOrDefault(post.UserId), @post.Body</p>
+        <li @onclick="() => OpenPost(post)">
+            <p>Title: @post.Title posted by @httpUserService.GetUsername(post.UserId).Result, @post.Body</p>
         </li>
     }
 </ul>
@@ -25,16 +26,15 @@
 @if (generatedPost != null)
 {
     <div style="padding: 20px; background-color: #6C7397">
-        <p>@generatedPost.Title by @username</p>
+        <p>@generatedPost.Title by @httpUserService.GetUsername(generatedPost.UserId).Result</p>
         <p>@generatedPost.Body</p>
-        <input class = "inputField" @bind="comment" placeholder="New Comment"/>
-        <input class = "inputField" @bind = "commentUserId" placeholder="User ID"/>
-        <button @onclick="() => AddNewComment(comment)">Add Comment</button>
+        <input class="inputField" @bind="comment" placeholder="New Comment"/>
+        <button @onclick="AddNewComment">Add Comment</button>
         <p>Comments: </p>
         <ul>
             @foreach (var comment in comments)
             {
-                <p>@comment.UserId: @comment.Body</p>
+                <p>@httpUserService.GetUsername(comment.UserId).Result: @comment.Body</p>
             }
         </ul>
     </div>
@@ -43,101 +43,58 @@
 <p>@response</p>
 
 @code {
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int userId;
     private string postTitle;
     private string postBody;
-    private string postUserId;
     private string response;
     private string comment;
-    private string commentUserId;
-    private string username;
-    private List<CreatePostDto> posts = new List<CreatePostDto>();
-    private List<CreateCommentDto> comments = new List<CreateCommentDto>();
+    private List<CreatePostDto> posts = new();
+    private List<CreateCommentDto> comments = new();
     private CreatePostDto generatedPost;
-    private Dictionary<int, string> usernames = new Dictionary<int, string>();
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var result = await httpPostService.GetPostsAsync();
-            if (result != null){
-                posts = result.ToList();
-                await LoadUsernames();
-            }
-        }
-        catch (Exception e)
-        {
-            response = $"Error loading posts: {e.Message}";
-        }
-    }
+        AuthenticationState authState = await State;
+        ClaimsPrincipal claimsPrincipal = authState.User;
+        if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
+            return;
 
-    private async Task LoadUsernames()
-    {
-        foreach (var post in posts)
-        {
-            if (!usernames.ContainsKey(post.UserId))
-                usernames[post.UserId] = await GetUsername(post.UserId);
-        }
-        StateHasChanged();
+        userId = int.Parse(claimsPrincipal.Claims.Single(c => c.Type == "Id").Value);
+        posts = (await httpPostService.GetPostsAsync())?.ToList() ?? new();
+        await httpUserService.LoadUsernamesForPosts(posts);
     }
 
     private async Task AddPost()
     {
-        var dto = new CreatePostDto
-        {
-            Title = postTitle,
-            Body = postBody,
-            UserId = Convert.ToInt32(postUserId)
-        };
-
+        var dto = new CreatePostDto { Title = postTitle, Body = postBody, UserId = userId };
         await httpPostService.AddPostAsync(dto);
-        response = $"Post with title '{postTitle}' and body '{postBody}' added";
+        
+        posts = (await httpPostService.GetPostsAsync())?.ToList() ?? new();
+        await httpUserService.LoadUsernamesForPosts(posts);
+        
+        response = $"Post '{postTitle}' added.";
+        postTitle = postBody = string.Empty;
+    }
 
-        var result = await httpPostService.GetPostsAsync();
-        if (result != null)
-            posts = result.ToList();
-
-        postTitle = "";
-        postBody = "";
-        postUserId = "";
-
-        StateHasChanged();
+    private async Task AddNewComment()
+    {
+        var dto = new CreateCommentDto { Body = comment, PostId = generatedPost.Id, UserId = userId };
+        await httpCommentService.AddComment(dto);
+        
+        await LoadCommentsForPost(generatedPost);
+        comment = string.Empty;
     }
 
     private async Task OpenPost(CreatePostDto post)
     {
         generatedPost = post;
+        await LoadCommentsForPost(post);
+    }
+
+    private async Task LoadCommentsForPost(CreatePostDto post)
+    {
         comments = await httpCommentService.GetComments(post.Id);
-        username = await GetUsername(post.UserId);
-
-        StateHasChanged();
-    }
-
-    private async Task<string> GetUsername(int userId)
-    {
-        try
-        {
-            var user = await httpUserService.GetUserAsync(userId);
-            return user?.Username ?? "Unknown";
-        }
-        catch (Exception)
-        {
-            return "Error retrieving username";
-        }
-    }
-
-    private async Task AddNewComment(string commentBody)
-    {
-        var dto = new CreateCommentDto
-        {
-            Body = commentBody,
-            PostId = generatedPost.Id,
-            UserId = Convert.ToInt32(commentUserId)
-        };
-
-        await httpCommentService.AddComment(dto);
-        comment = "";
-        comments = await httpCommentService.GetComments(generatedPost.Id);
-        StateHasChanged();
+        await httpUserService.LoadUsernamesForComments(comments);
     }
 }

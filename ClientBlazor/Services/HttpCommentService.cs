@@ -25,6 +25,18 @@ public class HttpCommentService: ICommentService
         });
     }
 
+    public async Task<CreateCommentDto?> GetCommentUsername(int id)
+    {
+        HttpResponseMessage httpResponseMessage = await client.GetAsync($"/Comment/user/{id}");
+        string response = await httpResponseMessage.Content.ReadAsStringAsync();
+        if (!httpResponseMessage.IsSuccessStatusCode)
+            throw new Exception(response);
+        return JsonSerializer.Deserialize<CreateCommentDto>(response, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+    }
+
     public async Task<CreateCommentDto?> AddComment(CreateCommentDto request)
     {
         HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync("/Comment", request);

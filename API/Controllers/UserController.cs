@@ -31,7 +31,7 @@ public class UserController : ControllerBase
         return Created($"users/{created.Id}", dto);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IResult> GetUser([FromRoute] int id)
     {
         User user = await userRepository.getSingleAsync(id);
