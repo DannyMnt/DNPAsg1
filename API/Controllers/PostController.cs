@@ -1,7 +1,9 @@
 using DTOs;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
+using IQueryable = System.Linq.IQueryable;
 
 namespace API.Controllers;
 
@@ -18,14 +20,14 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateCommentDto>> CreatePost([FromBody] CreatePostDto req, [FromServices]
-        IPostRepository
-            postRepository)
+    public async Task<ActionResult<CreatePostDto>> CreatePost([FromBody] CreatePostDto req)
     {
         Post post = new Post(req.Title, req.Body, req.UserId);
         Post created = await postRepository.AddAsync(post);
-        CreateCommentDto dto = new()
+        CreatePostDto dto = new()
         {
+            Id = created.Id,
+            Title = created.Title,
             Body = created.Body,
             UserId = created.UserId
         };
@@ -45,16 +47,49 @@ public class PostController : ControllerBase
     }
       
     [HttpGet("id/{id}")]
-    public async Task<IResult> GetPost([FromRoute] int id)
+    public async Task<IResult> GetPost([FromRoute] int id, [FromQuery] bool includeAuthor, [FromQuery] bool includeComments)
     {
-        Post post = await postRepository.getSingleAsync(id);
-        return Results.Ok(post);
+        var query = ((IQueryable<Post>)postRepository.getMany())
+            .Where(p => p.Id == id);
+
+        if (includeAuthor)
+            query = query.Include(p => p.User);
+        if (includeComments)
+            query = query.Include(p => p.Comments);
+
+        var post = await query.FirstOrDefaultAsync();
+
+        if (post == null)
+            return Results.NotFound();
+
+        var dto = new CreatePostDto
+        {
+            Id = post.Id,
+            Title = post.Title,
+            Body = post.Body,
+            UserId = post.UserId,
+            Author = includeAuthor ? new UserDto
+            {
+                Id = post.User.Id,
+                Username = post.User.Username
+            } : null,
+            Comments = includeComments 
+                ? post.Comments.Select(c => new CreateCommentDto
+                {
+                    Body = c.Body,
+                    PostId = c.PostId,
+                    UserId = post.UserId
+                }).ToList() 
+                : new List<CreateCommentDto>()
+        };
+
+        return Results.Ok(dto);
     }
 
     [HttpGet]
     public async Task<IResult> GetPostsByTitle([FromQuery] string? title)
     {
-        var posts = postRepository.getMany();
+        var posts = (IQueryable<Post>)postRepository.getMany();
         if (!string.IsNullOrEmpty(title))
         {
             posts = posts.Where(t => t.Title.ToLower().Contains(title.ToLower()));
@@ -63,16 +98,16 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("posts")]
-    public async Task<IEnumerable<Post>> GetPosts()
+    public async Task<IQueryable> GetPosts()
     {
-        IEnumerable<Post> posts = postRepository.getMany();
+        IQueryable posts = postRepository.getMany();
         return posts;
     }
 
     [HttpGet("user/{userId}")]
     public async Task<IResult> GetPostsByUser([FromRoute] int? userId)
     {
-        var posts = postRepository.getMany();
+        var posts = (IQueryable<Post>)postRepository.getMany();
         posts = posts.Where(t => t.UserId == userId);
         return Results.Ok(posts);
     }

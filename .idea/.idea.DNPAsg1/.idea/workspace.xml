@@ -14,15 +14,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22f44850-194b-4944-9ba9-8ef3d1de2c04" name="Changes" comment="Asg5 and 6">
-      <change beforePath="$PROJECT_DIR$/API/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/Components/Pages/Post.razor" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/Components/Pages/Post.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/Components/Pages/User.razor" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/Components/Pages/User.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/Services/HttpCommentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/Services/HttpCommentService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/Services/HttpUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/Services/HttpUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/Services/ICommentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/Services/ICommentService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/Services/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/Services/IUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClientBlazor/wwwroot/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/ClientBlazor/wwwroot/app.css" afterDir="false" />
+    <list default="true" id="22f44850-194b-4944-9ba9-8ef3d1de2c04" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/EfcRepositories/AppContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EfcRepositories/EfcCommentRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EfcRepositories/EfcPostRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EfcRepositories/EfcUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DNPAsg1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNPAsg1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/API/API.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Controllers/PostController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/PostController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DNPAsg1.sln" beforeDir="false" afterPath="$PROJECT_DIR$/DNPAsg1.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DNPAsg1.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/DNPAsg1.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DTOs/CreatePostDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DTOs/CreatePostDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/Comment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Comment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/Post.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Post.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/obj/Debug/net8.0/Entities.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/obj/Debug/net8.0/Entities.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/obj/Debug/net8.0/Entities.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/obj/Debug/net8.0/Entities.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileRepositories/PostFileRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileRepositories/PostFileRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RepositoryContracts/IPostRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RepositoryContracts/IPostRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RepositoryContracts/obj/Debug/net8.0/RepositoryContracts.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RepositoryContracts/obj/Debug/net8.0/RepositoryContracts.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RepositoryContracts/obj/Debug/net8.0/RepositoryContracts.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/RepositoryContracts/obj/Debug/net8.0/RepositoryContracts.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RepositoryContracts/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/RepositoryContracts/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +76,7 @@
     <setting file="file://$USER_HOME$/Downloads/WebAPI/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/13cbfe6856867dd1ed4e39575e46d816dae2a146a8ceec8f76b5897f5e0fe/Future.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3480484a9487a9e86082421e13728de7fe3b614a33b8b70d3c168334ae165/Single.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4b21fc3f8a3abb5d25f06c622276fbec0fd3932f169cc6af520bf5abc6a46b4/DbSet.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5855515dc3a0328f1f7271088a5871832db316467c998cc629ec45c60c110/AnyAll.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/60038225224a9318597b3232280390933d3c3fe85d9ed859a7e4825915eb1c/HttpClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a468a4971ac6dc9f4e2de8ff586c133e9bdd7a969529a89a9256fcd576d4837b/HttpClientJsonExtensions.Post.cs" root0="FORCE_HIGHLIGHTING" />
@@ -106,7 +121,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.ClientBlazor: http">
+  <component name="RunManager" selected=".NET Launch Settings Profile.API: http">
     <configuration name="CLI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -271,7 +286,10 @@
       <workItem from="1731161333034" duration="15036000" />
       <workItem from="1731266284989" duration="3776000" />
       <workItem from="1731330019113" duration="36339000" />
-      <workItem from="1731604823582" duration="8105000" />
+      <workItem from="1731604823582" duration="8378000" />
+      <workItem from="1731664642444" duration="790000" />
+      <workItem from="1732008042022" duration="736000" />
+      <workItem from="1732198754934" duration="12293000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <option name="closed" value="true" />
@@ -369,7 +387,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731614313431</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Bug fixes">
+      <option name="closed" value="true" />
+      <created>1731617556122</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1731617556122</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,7 +460,8 @@
     <MESSAGE value="Added saving in JSON files" />
     <MESSAGE value="Assignment 4" />
     <MESSAGE value="Asg5 and 6" />
-    <option name="LAST_COMMIT_MESSAGE" value="Asg5 and 6" />
+    <MESSAGE value="Bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -451,6 +478,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ClientBlazor/Services/HttpUserService.cs</url>
+          <line>54</line>
+          <properties documentPath="$PROJECT_DIR$/ClientBlazor/Services/HttpUserService.cs" containingFunctionPresentation="Method 'UpdateUserAsync'">
+            <startOffsets>
+              <option value="1602" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1688" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
